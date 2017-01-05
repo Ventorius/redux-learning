@@ -13,6 +13,6 @@ require('style!css!sass!applicationStyles')
 //   document.getElementById('app')
 // );
 
-// require('./redux-example')
-require('./redux-todo-example');
+require('./redux-example')
+// require('./redux-todo-example');
 

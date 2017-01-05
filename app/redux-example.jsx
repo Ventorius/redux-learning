@@ -1,36 +1,31 @@
 var redux = require('redux');
+var actions = require('./actions/index');
+var store = require('./store/configureStore').configure();
 
-console.log('Starting redux example');
-
-var reducer = (state = {name: 'Anonymous'}, action) => {
-
-  switch (action.type) {
-    case 'CHANGE_NAME':
-      return {
-        ...state,
-        name: action.name
-      };
-    default:
-      return state;
-  }
-};
-
-var store = redux.createStore(reducer, redux.compose(
-  window.devToolsExtension ? window.devToolsExtension() : f => f
-));
 
 store.subscribe(() => {
   var state = store.getState();
-  console.log('Name is', state.name)
-  document.getElementById('app').innerHTML = state.name;
+
+  console.log('New state', store.getState());
+
+  if(state.map.isFetching){
+    document.getElementById('app').innerHTML = 'Loading...'
+  }else if(state.map.url){
+    document.getElementById('app').innerHTML = '<a href="'+ state.map.url +'" target="_blank">View your location</a>'
+
+  }
 });
 
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Andrew'
-});
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Seba'
-});
+store.dispatch(actions.fetchLocation());
 
+store.dispatch(actions.changeName('Andrew'));
+store.dispatch(actions.changeName('Seba'));
+
+store.dispatch(actions.addHobby('Running'))
+store.dispatch(actions.addHobby('Swimming'))
+store.dispatch(actions.removeHobby(2))
+
+store.dispatch(actions.addMovie('Conjuring', 'horror'))
+store.dispatch(actions.addMovie('Mad Max', 'action'))
+store.dispatch(actions.addMovie('Dumb and Dumber', 'comedy'))
+store.dispatch(actions.removeMovie(2))
